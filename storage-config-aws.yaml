@@ -1,0 +1,31 @@
+config:
+  auth_enabled: false
+  schema_config:
+    configs:
+    - from: 2020-07-01
+      store: boltdb-shipper
+      object_store: s3
+      schema: v11
+      index:
+        prefix: index_
+        period: 24h
+  storage_config:
+    aws:
+      s3: s3://ap-southeast-1/<bucket-name>
+    boltdb_shipper:
+      active_index_directory: /data/loki/boltdb-shipper-active
+      cache_location: /data/loki/boltdb-shipper-cache
+      cache_ttl: 24h         # Can be increased for faster performance over longer query periods, uses more disk space
+      shared_store: s3
+  compactor:
+    working_directory: /data/compactor
+    shared_store: s3
+    compaction_interval: 5m
+persistence:
+  enabled: true
+
+replicas: 1
+serviceAccount:
+  create: false
+  name: loki-service-account
+  annotations: {}
